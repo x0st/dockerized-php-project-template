@@ -1,7 +1,8 @@
+include .env
+
 CURRENT_ABSOLUTE_PATH=$(shell pwd)
 CURRENT_DIR_IN_LOWER_CASE=$(shell echo $(notdir $(shell pwd)) | tr A-Z a-z)
 ARGS=$(filter-out $@, $(MAKECMDGOALS))
-PROJECT_NAME=dockerized-php-project-template
 COMPOSER_CONTAINER_NAME=${PROJECT_NAME}_composer-sidecar
 NETWORK=${PROJECT_NAME}_network
 
@@ -19,6 +20,7 @@ clean:
 	docker volume rm -f \
 		$(CURRENT_DIR_IN_LOWER_CASE)_consul \
 		$(CURRENT_DIR_IN_LOWER_CASE)_mysql
+	docker network rm ${NETWORK}
 
 rm:
 	docker rm -f $(shell docker-compose ps -q ${ARGS})

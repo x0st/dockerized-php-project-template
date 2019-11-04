@@ -13,7 +13,7 @@ services:
     depends_on:
       - php
     networks:
-      - dockerized-php-project-template_network
+      - ${PROJECT_NAME}_network
 
   php:
     build:
@@ -23,8 +23,7 @@ services:
       - ./codebase:/app
       - ./logs/php:/app/storage/logs
     networks:
-      - dockerized-php-project-template_network
-
+      - ${PROJECT_NAME}_network
 
   mysql:
     build:
@@ -35,8 +34,7 @@ services:
     ports:
       - 3306:3306
     networks:
-      - dockerized-php-project-template_network
-
+      - ${PROJECT_NAME}_network
 
   consul:
     image: consul
@@ -44,8 +42,7 @@ services:
     volumes:
       - consul:/consul/data
     networks:
-      - dockerized-php-project-template_network
-
+      - ${PROJECT_NAME}_network
 
   # ----------- SIDECARS ----------- #
 
@@ -57,8 +54,7 @@ services:
       - ./codebase:/app
       - ./logs/cron-sidecar:/var/log/adhoc-logs
     networks:
-      - dockerized-php-project-template_network
-
+      - ${PROJECT_NAME}_network
 
   consul-template-sidecar:
     build:
@@ -70,7 +66,7 @@ services:
       - ./codebase:/app
       - ./logs/consul-template-sidecar:/var/log/adhoc-logs
     networks:
-      - dockerized-php-project-template_network
+      - ${PROJECT_NAME}_network
 
 volumes:
   consul:
