@@ -3,6 +3,7 @@ include .env
 CURRENT_ABSOLUTE_PATH=$(shell pwd)
 CURRENT_DIR_IN_LOWER_CASE=$(shell echo $(notdir $(shell pwd)) | tr A-Z a-z)
 ARGS=$(filter-out $@, $(MAKECMDGOALS))
+
 COMPOSER_CONTAINER_NAME=${PROJECT_NAME}_composer-sidecar
 NETWORK=${PROJECT_NAME}_network
 
@@ -56,12 +57,12 @@ kv-force:
 		consul \
 		/bin/sh /home/consul-kv-seeder.sh --force --file=/home/consul-kv.json
 
-up:
+up: network
 	docker-compose up -d
 	sleep 5
 	echo "Done"
 
-up-build:
+up-build: network
 	docker-compose up -d --build
 	sleep 5
 	echo "Done"

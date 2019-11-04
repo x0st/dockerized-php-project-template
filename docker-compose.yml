@@ -12,8 +12,6 @@ services:
       - ./logs/nginx:/var/log/adhoc-logs
     depends_on:
       - php
-    networks:
-      - ${PROJECT_NAME}_network
 
   php:
     build:
@@ -22,8 +20,6 @@ services:
     volumes:
       - ./codebase:/app
       - ./logs/php:/app/storage/logs
-    networks:
-      - ${PROJECT_NAME}_network
 
   mysql:
     build:
@@ -33,16 +29,12 @@ services:
       - mysql:/var/lib/mysql
     ports:
       - 3306:3306
-    networks:
-      - ${PROJECT_NAME}_network
 
   consul:
     image: consul
     command: 'consul agent -server -bootstrap-expect=1 -data-dir=/consul/data -ui -client 0.0.0.0'
     volumes:
       - consul:/consul/data
-    networks:
-      - ${PROJECT_NAME}_network
 
   # ----------- SIDECARS ----------- #
 
@@ -53,8 +45,6 @@ services:
     volumes:
       - ./codebase:/app
       - ./logs/cron-sidecar:/var/log/adhoc-logs
-    networks:
-      - ${PROJECT_NAME}_network
 
   consul-template-sidecar:
     build:
@@ -65,8 +55,11 @@ services:
     volumes:
       - ./codebase:/app
       - ./logs/consul-template-sidecar:/var/log/adhoc-logs
-    networks:
-      - ${PROJECT_NAME}_network
+
+networks:
+  default:
+    external:
+      name: ${PROJECT_NAME}_network
 
 volumes:
   consul:
